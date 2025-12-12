@@ -1,0 +1,20 @@
+{
+  "name": "devinsight-worker",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "node --enable-source-maps src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.13.2",
+    "bullmq": "5.64.1",
+    "dotenv": "^16.3.1",
+    "ioredis": "^5.3.2",
+    "mongoose": "^7.5.0",
+    "openai": "^4.12.0",
+    "pino": "^8.21.0",
+    "pino-pretty": "^13.1.3"
+  }
+}
