@@ -2,9 +2,9 @@ name: DevInsight CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-test:
@@ -12,16 +12,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repository
-      - name: Checkout code
+      # ---------------- CHECKOUT ----------------
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Setup Node.js
+      # ---------------- NODE SETUP ----------------
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 19
+          node-version: 20
           cache: "npm"
+          cache-dependency-path: |
+            backend/package-lock.json
+            worker/package-lock.json
+            frontend/package-lock.json
 
       # ---------------- BACKEND ----------------
       - name: Install backend dependencies
@@ -67,9 +71,7 @@ jobs:
 
     steps:
       - name: Deploy Backend (Render)
-        run: |
-          curl -X POST "${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}"
+        run: curl -X POST "${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}"
 
       - name: Deploy Worker (Render)
-        run: |
-          curl -X POST "${{ secrets.RENDER_WORKER_DEPLOY_HOOK }}"
+        run: curl -X POST "${{ secrets.RENDER_WORKER_DEPLOY_HOOK }}"

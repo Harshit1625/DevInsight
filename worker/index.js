@@ -14,6 +14,8 @@ mongoose
   .then(() => {
     logger.info("Worker connected to MongoDB");
     const port = process.env.PORT || 4001;
+
+    //Worker doesnt needs a PORT , but deploying BgWorker requires money to deploy , so to get the free access i deployed it as a Web Service
     app.listen(port, () => {
       logger.info(`Worker service listening on port ${port}`);
       console.log(`Worker service listening on port ${port}`);
