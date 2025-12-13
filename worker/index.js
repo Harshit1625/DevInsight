@@ -1,5 +1,6 @@
 require("dotenv").config();
-
+const express = require("express");
+const app = express();
 const mongoose = require("mongoose");
 const { Worker } = require("bullmq");
 const processLog = require("./logProcessor");
@@ -12,6 +13,11 @@ mongoose
   })
   .then(() => {
     logger.info("Worker connected to MongoDB");
+    const port = process.env.PORT || 4001;
+    app.listen(port, () => {
+      logger.info(`Worker service listening on port ${port}`);
+      console.log(`Worker service listening on port ${port}`);
+    });
   })
   .catch((err) => {
     logger.error("MongoDB connection failed!", err);
