@@ -68,6 +68,7 @@ jobs:
     name: Deploy to Render
     needs: build-test
     runs-on: ubuntu-latest
+    environment: environment
 
     steps:
       - name: Deploy Backend (Render)
