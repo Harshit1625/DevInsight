@@ -4,7 +4,7 @@ export default function LogCard({ log, onClick }) {
   const summaryPending = !log.processed || !log.summary;
 
   // You don’t need state for this.
-  const disabled = useMemo(() => summaryPending, [summaryPending]);
+  const disabled = summaryPending;
 
   const handleClick = () => {
     if (disabled) return; // block click when summary isn't ready
