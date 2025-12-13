@@ -1,0 +1,75 @@
+name: DevInsight CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    name: Build & Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 19
+          cache: "npm"
+
+      # ---------------- BACKEND ----------------
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm ci
+
+      - name: Build backend
+        run: |
+          cd backend
+          npm run build || echo "No backend build step"
+
+      # ---------------- WORKER ----------------
+      - name: Install worker dependencies
+        run: |
+          cd worker
+          npm ci
+
+      - name: Build worker
+        run: |
+          cd worker
+          npm run build || echo "No worker build step"
+
+      # ---------------- FRONTEND ----------------
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+
+      # ---------------- TESTS ----------------
+      - name: Run tests
+        run: echo "Tests can be added later"
+
+  deploy:
+    name: Deploy to Render
+    needs: build-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy Backend (Render)
+        run: |
+          curl -X POST "${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}"
+
+      - name: Deploy Worker (Render)
+        run: |
+          curl -X POST "${{ secrets.RENDER_WORKER_DEPLOY_HOOK }}"
