@@ -21,4 +21,6 @@ https://devinsight-gsc5.onrender.com :- Backend
 
 https://devinsight-worker.onrender.com :- Worker
 
+https://api.render.com/deploy/srv-d4uq2v9r0fns73980b6g?key=aUREivgCpDg :- Worker
+
 

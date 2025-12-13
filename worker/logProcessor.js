@@ -2,7 +2,7 @@ const Log = require("./models/Log");
 const Group = require("./models/Group");
 const summarise = require("./summarizer");
 const logger = require("./utils/logger");
-const axios = require('axios');
+const axios = require("axios");
 async function fingerprintLog(message, meta) {
   // simple fingerprint: normalize message, remove numbers and stack traces
   const normalized = (message || "")
@@ -56,6 +56,9 @@ module.exports = async function processLog(data) {
     //Notify Backend -> backend broadcasts WebSocket event
     if (process.env.BACKEND_URL) {
       try {
+        logger.info("Notifying backend at:", {
+          url: `${process.env.BACKEND_URL}/api/ws/log-updated`,
+        });
         await axios.post(
           `${process.env.BACKEND_URL}/api/ws/log-updated`,
           { logId: log._id },
