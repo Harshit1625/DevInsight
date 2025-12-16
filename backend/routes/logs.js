@@ -9,21 +9,21 @@ const router = express.Router();
 //ingest Log
 router.post("/", async (req, res) => {
   try {
-    const { service, level = "error", message, meta } = req.body;
-    if (!service || !message) {
+    const { origin, level = "error", message, meta } = req.body;
+    if (!origin || !message) {
       return res
         .status(400)
-        .json({ error: "Service and message are required" });
+        .json({ error: "Origin and message are required" });
     }
 
-    const log = await Log.create({ service, level, message, meta });
+    const log = await Log.create({ origin, level, message, meta });
 
     const io = req.app.get("io");
     io.emit("log_created", log);
 
     await logsQueue.add(
       "process_log",
-      { logId: log._id, service, level },
+      { logId: log._id, origin, level },
       { attempts: 3 }
     );
 

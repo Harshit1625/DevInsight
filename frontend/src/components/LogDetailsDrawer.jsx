@@ -1,4 +1,7 @@
 import ReactMarkdown from "react-markdown";
+import { GrNotes } from "react-icons/gr";
+import { RxCrossCircled } from "react-icons/rx";
+
 export default function LogDetailsDrawer({ open, log, onClose }) {
   if (!open || !log) return null;
   const summaryPending = !log.processed || !log.summary;
@@ -15,12 +18,16 @@ export default function LogDetailsDrawer({ open, log, onClose }) {
         onClick={stop}
       >
         <div className="flex justify-between items-center mb-4">
-          <h3 className="font-semibold invisible mb-1">Summary</h3>
+          {/* <h3 className="font-semibold mb-1">Summary</h3> */}
+          <GrNotes className="text-xl" />
           <button
-            className="border rounded bg-black text-white px-3 py-1 text-sm"
+            className="border rounded bg-black text-white px-3 py-1 text-sm hover:bg-red-500 transition delay-100 duration-100 ease-in-out"
             onClick={onClose}
           >
-            Close
+            <div className="flex flex-row justify-between items-center gap-1">
+              <span>Close</span>
+              <RxCrossCircled />
+            </div>
           </button>
         </div>
 

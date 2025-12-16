@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const LogSchema = new mongoose.Schema({
-  service: { type: String, required: true }, // app/service name (causing logs)
-  level: { type: String, default: 'info' }, //Log severity level (info, warning, error, debug, etc.)
+  origin: { type: String, required: true }, // app/origin name or URL (causing logs)
+  level: { type: String, default: 'error' }, //Log severity level (info, warning, error, debug, etc.)
   message: { type: String, required: true }, //log message
   meta: { type: mongoose.Schema.Types.Mixed }, // arbitrary JSON
   timestamp: { type: Date, default: Date.now },

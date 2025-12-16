@@ -10,7 +10,7 @@ export const fetchGroups = () =>
 
 export const sendTestLog = () =>
   axios.post(`${API_BASE}/logs`, {
-    service: "frontend",
+    origin: "frontend",
     level: "error",
     message:
       "Failed to load user profile. API returned unexpected response format.",

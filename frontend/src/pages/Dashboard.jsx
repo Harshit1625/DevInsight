@@ -91,7 +91,7 @@ export default function Dashboard() {
 
       <h2 className="text-xl font-semibold mt-8">Recent Logs</h2>
       <div className="space-y-4 mt-4">
-        {logs.map((log) => (
+        {logs.map((log , index) => (
           <LogCard key={log._id} log={log} onClick={openDrawer} />
         ))}
       </div>
