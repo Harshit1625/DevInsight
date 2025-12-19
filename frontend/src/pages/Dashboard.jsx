@@ -4,13 +4,17 @@ import GroupList from "../components/GroupList";
 import LogCard from "../components/LogCard";
 import LogDetailsDrawer from "../components/LogDetailsDrawer";
 import io from "socket.io-client";
+import ErrorGroupsChart from "../components/charts/ErrorGroupsChart";
+import ProcessedVsPendingChart from "../components/charts/ProcessedVsPendingChart";
 
 export default function Dashboard() {
   const [groups, setGroups] = useState([]);
   const [logs, setLogs] = useState([]);
   const [selectedLog, setSelectedLog] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [disable, setDisabled] = useState(false);
+  const [processed, setProcessed] = useState({ processed: 0, notProcessed: 0 });
+
+  
 
   const openDrawer = (log) => {
     setSelectedLog(log);
@@ -23,9 +27,22 @@ export default function Dashboard() {
     setLogs(l);
   };
 
+  async function fetchProcessedCounts() {
+    const res = await fetch(
+      `${import.meta.env.VITE_SOCKET_BASE}/api/logs/countProcessed`
+    );
+    const data = await res.json();
+    console.log(data);
+    setProcessed({
+      processed: data.processed,
+      notProcessed: data.notProcessed,
+    });
+  }
+
   useEffect(() => {
     // 1️⃣ Load once
     load();
+    fetchProcessedCounts();
 
     // 2️⃣ Setup WebSocket
     const socket = io(import.meta.env.VITE_SOCKET_BASE, {
@@ -41,6 +58,7 @@ export default function Dashboard() {
     // NEW LOG visible instantly
     socket.on("log_created", (log) => {
       console.log("Log Created");
+      fetchProcessedCounts();
       setLogs((prev) => {
         if (prev.some((l) => l._id === log._id)) return prev;
         return [log, ...prev];
@@ -49,6 +67,7 @@ export default function Dashboard() {
 
     // SUMMARY + GROUP updated in realtime
     socket.on("log_updated", (updatedLog) => {
+      fetchProcessedCounts();
       setLogs((prev) =>
         prev.map((l) => (l._id === updatedLog._id ? updatedLog : l))
       );
@@ -86,12 +105,22 @@ export default function Dashboard() {
         Send Test Log
       </button>
 
+      {/* Charts */}
+      <div className="mt-6 flex flex-wrap gap-4">
+        <ProcessedVsPendingChart
+          processed={processed.processed}
+          pending={processed.notProcessed}
+        />
+
+        <ErrorGroupsChart groups={groups} />
+      </div>
+
       <h2 className="text-xl font-semibold mt-6">Error Groups</h2>
       <GroupList groups={groups} />
 
       <h2 className="text-xl font-semibold mt-8">Recent Logs</h2>
       <div className="space-y-4 mt-4">
-        {logs.map((log , index) => (
+        {logs.map((log, index) => (
           <LogCard key={log._id} log={log} onClick={openDrawer} />
         ))}
       </div>

@@ -6,7 +6,7 @@ const logger = require("./utils/logger");
 const http = require("http");
 const { Server } = require("socket.io");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const MONGO_URI = process.env.MONGO_URI;
 
 async function start() {

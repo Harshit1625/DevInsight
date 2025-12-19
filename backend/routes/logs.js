@@ -11,9 +11,7 @@ router.post("/", async (req, res) => {
   try {
     const { origin, level = "error", message, meta } = req.body;
     if (!origin || !message) {
-      return res
-        .status(400)
-        .json({ error: "Origin and message are required" });
+      return res.status(400).json({ error: "Origin and message are required" });
     }
 
     const log = await Log.create({ origin, level, message, meta });
@@ -33,6 +31,17 @@ router.post("/", async (req, res) => {
     logger.error("Error ingesting log:", e);
     res.status(500).json({ error: "Internal server error" });
   }
+});
+
+router.get("/countProcessed", async (req, res) => {
+  const notProcessed = await Log.countDocuments({ processed: false });
+  console.log(notProcessed);
+  const processed = await Log.countDocuments({ processed: true });
+  const count = {
+    processed,
+    notProcessed,
+  };
+  res.status(200).json({ processed, notProcessed });
 });
 
 //fetch recent logs

@@ -68,6 +68,5 @@ STRICT RULES:
     return text.trim().slice(0, 2000);
   } catch (error) {
     logger.error("Error generating summary: " + error);
-    return `Summarization failed. Auto Summary: ${message.slice(0, 200)}`;
   }
 };
